@@ -30,6 +30,7 @@ jobs:
         API: 21
       run: |
         mkdir libwebp_build libwebp_install
-        cd libwebp_build
+        cd libwebp && ./autogen.sh
+        cd ../libwebp_build
         $GITHUB_WORKSPACE/libwebp/configure --prefix=$GITHUB_WORKSPACE/libwebp_install --enable-static=no --disable-libwebpdemux --disable-avx2 --disable-sse4.1 --disable-sse2 --disable-neon --disable-neon-rtcd --disable-threading --disable-gl --disable-sdl --disable-png --disable-jpeg --disable-tiff --disable-gif --disable-wic --enable-swap-16bit-csp --host=$TARGET$API --with-sysroot=$ANDROID_TOOLCHAIN_HOME/sysroot CC="clang -target $TARGET$API" LD=ld LDFLAGS="-target $TARGET$API" STRIP=llvm-strip AR=llvm-ar NM=llvm-nm LINK=llvm-link OBJDUMP=llvm-objdump DLLTOOL=llvm-dlltool RANLIB=llvm-ranlib
         make install
