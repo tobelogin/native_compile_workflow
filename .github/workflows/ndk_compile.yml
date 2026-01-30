@@ -1,0 +1,35 @@
+name: Android native compile
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Android NDK
+      id: android_ndk_install
+      uses: nttld/setup-ndk@v1.5.0
+      with:
+        ndk-version: r27d
+        add-to-path: true
+        link-to-sdk: true
+        local-cache: true
+
+    - name: Checkout libwebp
+      uses: actions/checkout@v6
+      with:
+        repository: 'webmproject/libwebp'
+        ref: 'v1.6.0'
+        path: 'libwebp'
+
+    - name: Build libwebp for arm64-v8a
+      env:
+        ANDROID_NDK_HOME: ${{ steps.android_ndk_install.outputs.ndk-path }}
+        ANDROID_TOOLCHAIN_HOME: $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64
+        TARGET: aarch64-linux-android
+        API: 21
+      run: |
+        mkdir libwebp_build libwebp_install
+        cd libwebp_build
+        ../libwebp/configure --prefix=../libwebp_install --enable-static=no --disable-libwebpdemux --disable-avx2 --disable-sse4.1 --disable-sse2 --disable-neon --disable-neon-rtcd --disable-threading --disable-gl --disable-sdl --disable-png --disable-jpeg --disable-tiff --disable-gif --disable-wic --enable-swap-16bit-csp --host=$TARGET$API --with-sysroot=$ANDROID_TOOLCHAIN_HOME/sysroot CC="clang -target $TARGET$API" LD=ld LDFLAGS="-target $TARGET$API" STRIP=llvm-strip AR=llvm-ar NM=llvm-nm LINK=llvm-link OBJDUMP=llvm-objdump DLLTOOL=llvm-dlltool RANLIB=llvm-ranlib
+        make install
