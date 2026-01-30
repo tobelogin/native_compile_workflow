@@ -32,7 +32,7 @@ jobs:
       uses: actions/checkout@v6
       with:
         repository: 'tobelogin/Pixiv-Shaft'
-        ref: 'master'
+        ref: 'fix_github_ci_issues'
         path: 'shaft2'
 
     - name: set up JDK 21
