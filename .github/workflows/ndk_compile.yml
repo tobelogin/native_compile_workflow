@@ -29,6 +29,7 @@ jobs:
         TARGET: aarch64-linux-android
         API: 21
       run: |
+        export PATH=$ANDROID_TOOLCHAIN_HOME/bin:$PATH
         mkdir libwebp_build libwebp_install
         cd libwebp && ./autogen.sh
         cd ../libwebp_build
