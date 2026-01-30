@@ -42,7 +42,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Build with Gradle
+      working-directory: ./shaft2
       run: |
-        cd shaft2
         chmod +x gradlew
         ./gradlew --no-daemon assembleRelease
